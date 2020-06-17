@@ -7,8 +7,8 @@ function App() {
 
     return (
         <Container>
-            {products.map((product) => {
-                return <CardCart product={product} />
+            {products.map((product, i) => {
+                return <CardCart key={i} product={product} />
             })}
         </Container>
     )
