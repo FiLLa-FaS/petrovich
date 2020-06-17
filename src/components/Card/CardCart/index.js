@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -6,44 +6,45 @@ import React, { useState } from 'react'
 import { UiButton } from '../../Ui'
 import './CardCart.scss'
 
-const CardCart = ({ product, count = 1 }) => {
+const CardCart = ({ product }) => {
+    const [count, setCount] = useState(1)
+    const [showAltPrice, setShowAltPrice] = useState(false)
+
+    const code = product.code.replace(/^0+/, '')
     const tools = product.assocProducts.split(';')
     tools.pop()
 
-    const code = product.code.replace(/^0+/, '')
-
-    const [showAltPrice, setShowAltPrice] = useState(false)
-
-    const CountPlus = (count) => {
-        count += 1
-        return count
+    const CountPlus = () => {
+        setCount(count + 1)
     }
-    const CountMinus = (count) => {
-        if (count === 0) {
-            return count
+    const CountMinus = () => {
+        if (count > 1) {
+            setCount(count - 1)
         }
-        count -= 1
-        return count
     }
-    // В функции showCardCartInfo выполняется сравнение unit и unitAlt, unitRatio и unitRatioAlt, чтобы не показывать информацию, если товар продается только в одном виде (в штуках или в упаковках)
-    // const showCardCartInfo = () => {
-    //     if (product.unitRatio !== product.unitRatioAlt &&
-    //         product.unit !== product.unitAlt) {
-    //         return (
-    //                 <div className="card-cart-info">
-    //                 <ion-icon
-    //                     name="information-circle"
-    //                     className="card-cart-info__icon"
-    //                 />
-    //                 <p className="card-cart-info__text">
-    //                     Продается упаковками: <br />
-    //                     {product.unitRatio}
-    //                     {product.unit} = {product.unitRatioAlt}
-    //                     {product.unitAlt}
-    //                 </p>
-    //             </div>
-    //         )
-    // }
+
+    // В функции showCardCartInfo выполняется сравнение unit и unitAlt,
+    // unitRatio и unitRatioAlt,чтобы не показывать информацию,
+    // если товар продается только в одном виде (в штуках или в упаковках)
+    const showCardCartInfo = () => {
+        if (
+            product.unitRatio !== product.unitRatioAlt &&
+            product.unit !== product.unitAlt
+        ) {
+            return (
+                <div className="card-cart-info">
+                    <ion-icon
+                        name="information-circle"
+                        className="card-cart-info__icon"
+                    />
+                    <p className="card-cart-info__text">
+                        Продается упаковками: <br />
+                        {`${product.unitRatio} ${product.unit} = ${product.unitRatioAlt} ${product.unitAlt}`}
+                    </p>
+                </div>
+            )
+        }
+    }
 
     return (
         <div className="card-cart">
@@ -92,18 +93,20 @@ const CardCart = ({ product, count = 1 }) => {
                                     По карте клуба
                                 </span>
                                 <span className="card-cart-price__primary">
-                                    {showAltPrice
-                                        ? +product.priceGoldAlt.toFixed(2)
-                                        : product.priceGold}
-                                    ₽
+                                    {`${
+                                        showAltPrice
+                                            ? +product.priceGoldAlt.toFixed(2)
+                                            : product.priceGold
+                                    } ₽`}
                                 </span>
                             </div>
 
                             <div className="card-cart-price__secondary">
-                                {showAltPrice
-                                    ? +product.priceRetailAlt.toFixed(2)
-                                    : product.priceRetail}
-                                ₽
+                                {`${
+                                    showAltPrice
+                                        ? +product.priceRetailAlt.toFixed(2)
+                                        : product.priceRetail
+                                } ₽`}
                             </div>
                         </div>
                         <div className="card-cart__points">
@@ -131,23 +134,8 @@ const CardCart = ({ product, count = 1 }) => {
                                 За упаковку
                             </div>
                         </div>
-                        {/* {showCardCartInfo()} */}
-                        {/* {product.unitRatio !== product.unitRatioAlt &&
-                            product.unit !== product.unitAlt && (
-                                <div className="card-cart-info">
-                                    <ion-icon
-                                        name="information-circle"
-                                        className="card-cart-info__icon"
-                                    />
+                        {showCardCartInfo()}
 
-                                    <p className="card-cart-info__text">
-                                        Продается упаковками: <br />
-                                        {product.unitRatio}
-                                        {product.unit} = {product.unitRatioAlt}
-                                        {product.unitAlt}
-                                    </p>
-                                </div>
-                            )} */}
                         <div className="card-cart-buy">
                             <div className="card-cart-counter">
                                 <div className="card-cart-counter__col">
@@ -155,14 +143,18 @@ const CardCart = ({ product, count = 1 }) => {
                                 </div>
                                 <div className="card-cart-counter__col">
                                     <div
-                                        onClick={() => CountPlus(count)}
+                                        onClick={() => CountPlus()}
                                         className="card-cart-counter__row"
                                     >
                                         <ion-icon name="chevron-up-outline" />
                                     </div>
                                     <div
-                                        onClick={() => CountMinus(count)}
-                                        className="card-cart-counter__row"
+                                        onClick={() => CountMinus()}
+                                        className={`${
+                                            count === 1
+                                                ? 'card-cart-counter__row card-cart-counter__row--disabled'
+                                                : 'card-cart-counter__row'
+                                        }`}
                                     >
                                         <ion-icon name="chevron-down-outline" />
                                     </div>

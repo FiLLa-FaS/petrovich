@@ -253,6 +253,11 @@
                     color: #fff;
                 }
             }
+
+            &--disabled {
+                pointer-events: none;
+                background-color: #eee;
+            }
         }
     }
 }

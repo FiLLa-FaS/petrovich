@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable global-require */
 import React from 'react'
 import { CardCart, Container } from './components'
